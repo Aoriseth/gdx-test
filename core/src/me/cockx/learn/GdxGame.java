@@ -14,7 +14,7 @@ public class GdxGame extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private Texture img;
 	private TextureAtlas textureAtlas;
-	private Sprite banana;
+	private Sprite crate;
 	private ExtendViewport extendViewport;
 	private OrthographicCamera camera;
 
@@ -23,7 +23,7 @@ public class GdxGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
 		textureAtlas = new TextureAtlas("sprites.txt");
-		banana = textureAtlas.createSprite("banana");
+		crate = textureAtlas.createSprite("crate");
 		camera = new OrthographicCamera();
 		extendViewport = new ExtendViewport(800,600,camera);
 	}
@@ -35,7 +35,11 @@ public class GdxGame extends ApplicationAdapter {
 		batch.begin();
 //		batch.draw(img, 0, 0);
 //		batch.draw(img,250,250);
-		banana.draw(batch);
+		crate.setPosition(0,0);
+		crate.draw(batch);
+		crate.setPosition(crate.getWidth(),0);
+		crate.draw(batch);
+
 		batch.end();
 	}
 	
@@ -48,7 +52,7 @@ public class GdxGame extends ApplicationAdapter {
 
 	@Override
 	public void resize(int width, int height) {
-		extendViewport.update(width,height);
+		extendViewport.update(width,height,true);
 		batch.setProjectionMatrix(camera.combined);
 	}
 }
