@@ -9,10 +9,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.codeandweb.physicseditor.PhysicsShapeCache;
 
 import java.util.HashMap;
 
@@ -24,6 +24,10 @@ public class GdxGame extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	private final HashMap<String, Sprite> sprites = new HashMap<String, Sprite>();
 	private World world;
+    private PhysicsShapeCache physicsBodies;
+	private Box2DDebugRenderer renderer;
+	private Body crate;
+	private Body ground;
 
 	private static final float STEP_TIME = 1f / 60f;
 	private static final int VELOCITY_ITERATIONS = 6;
@@ -31,6 +35,7 @@ public class GdxGame extends ApplicationAdapter {
 	private static final float SCALE = 0.05f;
 
 	private float accumulator = 0;
+	private Body crate2;
 
 	@Override
 	public void create () {
@@ -42,6 +47,10 @@ public class GdxGame extends ApplicationAdapter {
 		addSprites();
 		Box2D.init();
 		world = new World(new Vector2(0, -10), true);
+		renderer = new Box2DDebugRenderer();
+		physicsBodies = new PhysicsShapeCache("physics.xml");
+		crate = createBody("crate",10,10,0);
+		crate2 = createBody("crate",12,15,0);
 	}
 
 	@Override
@@ -49,11 +58,17 @@ public class GdxGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0.57f, 0.77f, 0.85f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		drawSprite("crate",0,0);
-		drawSprite("crate",8,12);
-		drawSprite("cherries",30,0);
+		drawSprite("crate",0,0,0 );
+		Vector2 position = crate.getPosition();
+		float degrees = (float)Math.toDegrees(crate.getAngle());
+		drawSprite("crate",position.x,position.y,degrees );
+		Vector2 position2 = crate2.getPosition();
+		float degrees2 = (float)Math.toDegrees(crate2.getAngle());
+		drawSprite("crate",position2.x,position2.y,degrees2 );
+		drawSprite("cherries",30,0,0 );
 		batch.end();
 		stepWorld();
+		renderer.render(world,camera.combined);
 	}
 
 	private void stepWorld() {
@@ -75,17 +90,21 @@ public class GdxGame extends ApplicationAdapter {
 		textureAtlas.dispose();
 		sprites.clear();
 		world.dispose();
+		renderer.dispose();
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		extendViewport.update(width,height,true);
 		batch.setProjectionMatrix(camera.combined);
+		createGround();
 	}
 
-	private void drawSprite(String name, float x, float y) {
+	private void drawSprite(String name, float x, float y, float degrees) {
 		Sprite sprite = sprites.get(name);
 		sprite.setPosition(x, y);
+		sprite.setRotation(degrees);
+		sprite.setOrigin(0f,0f);
 		sprite.draw(batch);
 	}
 
@@ -102,5 +121,33 @@ public class GdxGame extends ApplicationAdapter {
 			sprites.put(region.name, sprite);
 
 		}
+	}
+
+	private Body createBody(String name, float x, float y, float rotation) {
+		Body body = physicsBodies.createBody(name, world, SCALE, SCALE);
+		body.setTransform(x, y, rotation);
+
+		return body;
+	}
+
+	private void createGround() {
+		if (ground != null) world.destroyBody(ground);
+
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.type = BodyDef.BodyType.StaticBody;
+
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.friction=1;
+
+		PolygonShape shape = new PolygonShape();
+		shape.setAsBox(camera.viewportWidth, 0);
+
+		fixtureDef.shape = shape;
+
+		ground = world.createBody(bodyDef);
+		ground.createFixture(fixtureDef);
+		ground.setTransform(0, 0, 0);
+
+		shape.dispose();
 	}
 }
