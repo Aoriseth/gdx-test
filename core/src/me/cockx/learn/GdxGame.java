@@ -3,16 +3,20 @@ package me.cockx.learn;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 public class GdxGame extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private Texture img;
 	private TextureAtlas textureAtlas;
 	private Sprite banana;
+	private ExtendViewport extendViewport;
+	private OrthographicCamera camera;
 
 	@Override
 	public void create () {
@@ -20,6 +24,8 @@ public class GdxGame extends ApplicationAdapter {
 		img = new Texture("badlogic.jpg");
 		textureAtlas = new TextureAtlas("sprites.txt");
 		banana = textureAtlas.createSprite("banana");
+		camera = new OrthographicCamera();
+		extendViewport = new ExtendViewport(800,600,camera);
 	}
 
 	@Override
@@ -38,5 +44,11 @@ public class GdxGame extends ApplicationAdapter {
 		batch.dispose();
 		img.dispose();
 		textureAtlas.dispose();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		extendViewport.update(width,height);
+		batch.setProjectionMatrix(camera.combined);
 	}
 }
