@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
@@ -29,6 +28,8 @@ public class GdxGame extends ApplicationAdapter {
 	private Box2DDebugRenderer renderer;
 	private Body crate;
 	private Body ground;
+	private Body faroslog;
+	private Body dude;
 
 	private static final float STEP_TIME = 1f / 60f;
 	private static final int VELOCITY_ITERATIONS = 6;
@@ -54,6 +55,8 @@ public class GdxGame extends ApplicationAdapter {
 		physicsBodies = new PhysicsShapeCache("physics.xml");
 		crate = createBody("crate",10,10,0);
 		crate2 = createBody("crate",12,15,0);
+		faroslog = createBody("farosLog",12,25,0);
+		dude = createBody("flyGuy",25,5,0);
 		generateFruit();
 	}
 
@@ -85,25 +88,35 @@ public class GdxGame extends ApplicationAdapter {
 		float degrees2 = (float)Math.toDegrees(crate2.getAngle());
 		drawSprite("crate",position2.x,position2.y,degrees2 );
 
+		matchSpriteToBody(faroslog,"farosLog");
+		matchSpriteToBody(dude,"flyGuy");
+
 		renderFruitSprites();
 
+		float force = 10f;
 		if (Gdx.input.isKeyPressed(Input.Keys.F)){
-			crate.applyLinearImpulse(0,50,crate.getPosition().x,crate.getPosition().y,false);
+			dude.applyLinearImpulse(0,force,crate.getPosition().x,crate.getPosition().y,false);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.T)){
-			crate.applyLinearImpulse(50,0,crate.getPosition().x,crate.getPosition().y,false);
+			dude.applyLinearImpulse(force,0,crate.getPosition().x,crate.getPosition().y,false);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.R)){
-			crate.applyLinearImpulse(-50,0,crate.getPosition().x,crate.getPosition().y,false);
+			dude.applyLinearImpulse(-force,0,crate.getPosition().x,crate.getPosition().y,false);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.S)){
-			crate.applyLinearImpulse(0,-50,crate.getPosition().x,crate.getPosition().y,false);
+			dude.applyLinearImpulse(0,-force,crate.getPosition().x,crate.getPosition().y,false);
 		}
 
 
 		batch.end();
 		stepWorld();
 //		renderer.render(world,camera.combined); // Draws physics wireframes
+	}
+
+	private void matchSpriteToBody(Body body, String spriteName) {
+		Vector2 position = body.getPosition();
+		float degrees = (float)Math.toDegrees(body.getAngle());
+		drawSprite(spriteName,position.x,position.y,degrees );
 	}
 
 	private void renderFruitSprites() {

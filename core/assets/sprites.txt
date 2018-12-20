@@ -1,5 +1,5 @@
 sprites.png
-size: 512, 128
+size: 768, 128
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
@@ -24,9 +24,23 @@ crate
   orig: 128, 128
   offset: 0, 0
   index: -1
-orange
+farosLog
   rotate: false
   xy: 384, 0
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+flyGuy
+  rotate: false
+  xy: 512, 0
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+orange
+  rotate: false
+  xy: 640, 0
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

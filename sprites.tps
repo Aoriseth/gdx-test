@@ -181,6 +181,8 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">../farosLog.png</key>
+            <key type="filename">../flyGuy.png</key>
             <key type="filename">raw-assets/banana.png</key>
             <key type="filename">raw-assets/cherries.png</key>
             <key type="filename">raw-assets/crate.png</key>
@@ -201,6 +203,8 @@
         <key>fileList</key>
         <array>
             <filename>raw-assets</filename>
+            <filename>../flyGuy.png</filename>
+            <filename>../farosLog.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
