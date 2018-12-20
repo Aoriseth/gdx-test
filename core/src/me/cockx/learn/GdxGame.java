@@ -4,7 +4,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -19,7 +18,6 @@ import java.util.Random;
 
 public class GdxGame extends ApplicationAdapter {
 	private SpriteBatch batch;
-	private Texture img;
 	private TextureAtlas textureAtlas;
 	private ExtendViewport extendViewport;
 	private OrthographicCamera camera;
@@ -44,7 +42,6 @@ public class GdxGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
 		textureAtlas = new TextureAtlas("sprites.txt");
 		camera = new OrthographicCamera();
 		extendViewport = new ExtendViewport(50,50,camera);
@@ -86,6 +83,14 @@ public class GdxGame extends ApplicationAdapter {
 		float degrees2 = (float)Math.toDegrees(crate2.getAngle());
 		drawSprite("crate",position2.x,position2.y,degrees2 );
 
+		renderFruitSprites();
+
+		batch.end();
+		stepWorld();
+		renderer.render(world,camera.combined);
+	}
+
+	private void renderFruitSprites() {
 		for (int i = 0; i < fruitBodies.length; i++) {
 			Body body = fruitBodies[i];
 			String name = names[i];
@@ -94,11 +99,6 @@ public class GdxGame extends ApplicationAdapter {
 			float degrees3 = (float) Math.toDegrees(body.getAngle());
 			drawSprite(name, position3.x, position3.y, degrees3);
 		}
-
-
-		batch.end();
-		stepWorld();
-		renderer.render(world,camera.combined);
 	}
 
 	private void stepWorld() {
@@ -116,7 +116,6 @@ public class GdxGame extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
 		textureAtlas.dispose();
 		sprites.clear();
 		world.dispose();
