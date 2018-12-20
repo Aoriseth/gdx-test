@@ -95,16 +95,16 @@ public class GdxGame extends ApplicationAdapter {
 
 		float force = 10f;
 		if (Gdx.input.isKeyPressed(Input.Keys.F)){
-			dude.applyLinearImpulse(0,force,crate.getPosition().x,crate.getPosition().y,false);
+			dude.applyLinearImpulse(0,force,dude.getPosition().x,dude.getPosition().y,false);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.T)){
-			dude.applyLinearImpulse(force,0,crate.getPosition().x,crate.getPosition().y,false);
+			dude.applyLinearImpulse(force,0,dude.getPosition().x,dude.getPosition().y,false);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.R)){
-			dude.applyLinearImpulse(-force,0,crate.getPosition().x,crate.getPosition().y,false);
+			dude.applyLinearImpulse(-force,0,dude.getPosition().x,dude.getPosition().y,false);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.S)){
-			dude.applyLinearImpulse(0,-force,crate.getPosition().x,crate.getPosition().y,false);
+			dude.applyLinearImpulse(0,-force,dude.getPosition().x,dude.getPosition().y,false);
 		}
 
 
