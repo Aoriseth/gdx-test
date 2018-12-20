@@ -87,7 +87,7 @@ public class GdxGame extends ApplicationAdapter {
 
 		batch.end();
 		stepWorld();
-		renderer.render(world,camera.combined);
+//		renderer.render(world,camera.combined); // Draws physics wireframes
 	}
 
 	private void renderFruitSprites() {
