@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.codeandweb.physicseditor.PhysicsShapeCache;
 
 import java.util.HashMap;
+import java.util.Random;
 
 public class GdxGame extends ApplicationAdapter {
 	private SpriteBatch batch;
@@ -33,9 +34,12 @@ public class GdxGame extends ApplicationAdapter {
 	private static final int VELOCITY_ITERATIONS = 6;
 	private static final int POSITION_ITERATIONS = 2;
 	private static final float SCALE = 0.05f;
+	private static final int COUNT = 20;
 
 	private float accumulator = 0;
 	private Body crate2;
+	private Body[] fruitBodies = new Body[COUNT];
+	private String[] names = new String[COUNT];
 
 	@Override
 	public void create () {
@@ -51,6 +55,23 @@ public class GdxGame extends ApplicationAdapter {
 		physicsBodies = new PhysicsShapeCache("physics.xml");
 		crate = createBody("crate",10,10,0);
 		crate2 = createBody("crate",12,15,0);
+		generateFruit();
+	}
+
+	private void generateFruit() {
+		String[] fruitNames = new String[]{"banana", "cherries", "orange"};
+
+		Random random = new Random();
+
+		for (int i = 0; i < fruitBodies.length; i++) {
+			String name = fruitNames[random.nextInt(fruitNames.length)];
+
+			float x = random.nextFloat() * 50;
+			float y = random.nextFloat() * 50 + 50;
+
+			names[i] = name;
+			fruitBodies[i] = createBody(name, x, y, 0);
+		}
 	}
 
 	@Override
@@ -58,14 +79,23 @@ public class GdxGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0.57f, 0.77f, 0.85f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		drawSprite("crate",0,0,0 );
 		Vector2 position = crate.getPosition();
 		float degrees = (float)Math.toDegrees(crate.getAngle());
 		drawSprite("crate",position.x,position.y,degrees );
 		Vector2 position2 = crate2.getPosition();
 		float degrees2 = (float)Math.toDegrees(crate2.getAngle());
 		drawSprite("crate",position2.x,position2.y,degrees2 );
-		drawSprite("cherries",30,0,0 );
+
+		for (int i = 0; i < fruitBodies.length; i++) {
+			Body body = fruitBodies[i];
+			String name = names[i];
+
+			Vector2 position3 = body.getPosition();
+			float degrees3 = (float) Math.toDegrees(body.getAngle());
+			drawSprite(name, position3.x, position3.y, degrees3);
+		}
+
+
 		batch.end();
 		stepWorld();
 		renderer.render(world,camera.combined);
